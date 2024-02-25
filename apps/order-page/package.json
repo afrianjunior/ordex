@@ -1,0 +1,21 @@
+{
+  "name": "order-page",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vite build",
+    "clean": "rescript clean -with-deps",
+    "format": "rescript format -all",
+    "serve": "vite preview",
+    "start": "vite",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@fontsource/plus-jakarta-sans": "^5.0.18",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-slot": "^1.0.2",
+    "vaul": "^0.8.9",
+    "vite-plugin-singlefile": "^0.13.5"
+  }
+}
