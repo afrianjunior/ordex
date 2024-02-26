@@ -9,6 +9,13 @@
   "workspaces": [
     "apps/*"
   ],
+  "scripts": {
+    "postinstall": "yarn yarn-deduplicate",
+    "build": "turbo run build",
+    "export": "turbo run export",
+    "dev": "turbo run dev --parallel",
+    "test": "turbo run test"
+  },
   "dependencies": {
     "@rescript/core": "^0.6.0",
     "@rescript/react": "^0.11.0",

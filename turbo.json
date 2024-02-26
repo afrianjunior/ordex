@@ -1,0 +1,28 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "outputMode": "errors-only",
+      "dependsOn": ["^build"],
+      "inputs": ["**/*.{js,jsx,ts,tsx}", "**/public/**"],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**",
+        "**/out/**"
+      ]
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputMode": "errors-only"
+    },
+    "deploy": {
+      "outputMode": "errors-only",
+      "dependsOn": ["build"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

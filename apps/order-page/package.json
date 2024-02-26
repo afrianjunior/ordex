@@ -7,7 +7,7 @@
     "clean": "rescript clean -with-deps",
     "format": "rescript format -all",
     "serve": "vite preview",
-    "start": "vite",
+    "dev": "vite",
     "test": "vitest"
   },
   "dependencies": {
