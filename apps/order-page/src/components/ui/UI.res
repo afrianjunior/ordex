@@ -3,3 +3,4 @@ module Input = Ui_input
 module Badge = Ui_badge
 module Meteors = Ui_meteors
 module Sparkles = Ui_sparkles
+module ScrollArea = Ui_scroll_area

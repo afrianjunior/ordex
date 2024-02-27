@@ -1,11 +1,11 @@
 type variant = 
-  | @as("solid")Solid
-  | @as("outline")Outline
-  | @as("destructive")Destructive
-  | @as("link")Link
-  | @as("ghost")Ghost
-  | @as("secondary")Secondary
-  | @as("default")None
+  | @as("solid") Solid
+  | @as("outline") Outline
+  | @as("destructive") Destructive
+  | @as("link") Link
+  | @as("ghost") Ghost
+  | @as("secondary") Secondary
+  | @as("default") None
 
 type size =
   | @as("sm")Small
