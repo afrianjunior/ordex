@@ -1,10 +1,20 @@
-@module("./scroll-area") @scope("ScrollArea")
+module ScrollArea = {
+  @module("./scroll-area")
+  @react.component
+  external make: (
+    ~children: React.element=?,
+    ~className: string=?,
+    ~ref: React.element=?
+  ) => React.element = "ScrollArea"
+}
 
-external make: React.component<((
-  ~children: React.element=?,
-  ~className: string=?
-) => (
-  ~children: React.element=?,
-  ~className: string=?
-) => React.element)> = "ScrollArea"
+module ScrollBar = {
+  @module("./scroll-area")
+  @react.component
+  external make: (
+    ~children: React.element=?,
+    ~className: string=?,
+    ~orientation: string=?
+  ) => React.element = "ScrollBar"
+}
 

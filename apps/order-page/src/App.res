@@ -1,3 +1,102 @@
+module Title = {
+  @react.component
+  let make = (~children: React.element, ~id) => {
+    <h2 id={id} className="leading-relaxed scroll-m-20 text-xl font-semibold tracking-tight">
+      children
+    </h2>
+   
+  }
+}
+
+type cardOrientation = 
+  | Vertical
+  | Horizontal
+
+type flag =
+  | @as("recommended")Recommended
+  | @as("spicy")Spicy
+  | @as("new")New
+  | @as("best-seller")BestSeller
+  | @as("kids-friendly")KidsFriendly
+  | @as("")None
+
+type price = {
+  value: float,
+  currency: string
+}
+type item = {
+  title: string,
+  description: string,
+  image: string,
+  price: price,
+  flag: array<flag>
+}
+
+module CardVertical = {
+  @react.component
+  let make = (~data) => {
+    <div>
+      <div className="rounded-md h-52 w-full bg-cover bg-center" style={{backgroundImage: "url(" ++ data.image ++ ")"}} />
+      <h4 className="leading-10 font-bold">
+        {data.title->React.string}
+      </h4>
+      <div className="leading-6 font-bold">
+        <span>
+          {data.price.value->React.float}
+        </span>
+        <span className="pl-1">
+          {data.price.currency->React.string}
+        </span>
+      </div>
+      <div className="mt-4">
+        <UI.Button variant={UI.Button.Outline} className="w-full border border-gray-400">{"Add"->React.string}</UI.Button>
+      </div>
+    </div>
+  }
+}
+
+module CardHorizontal = {
+  @react.component
+  let make = (~data) => {
+    <div>
+      <div className="grid grid-cols-3 gap-6">
+        <div className="col-span-2">
+          <h4 className="leading-10 font-bold">
+            {data.title->React.string}
+          </h4>
+          <p className="leading-7 text-sm text-zinc-400">
+            {data.description->React.string}
+          </p>
+
+        </div>
+        <div>
+          <div className="rounded-md h-32 w-full bg-cover bg-center" style={{backgroundImage: "url(" ++ data.image ++ ")"}} />
+
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-6">
+        <div className="col-span-1">
+          <div className="leading-6 font-bold mt-3">
+            <span>
+              {data.price.value->React.float}
+            </span>
+            <span className="pl-1">
+              {data.price.currency->React.string}
+            </span>
+          </div>
+        </div>
+
+        <div className="col-span-1 col-start-3">
+          <div className="mt-4">
+            <UI.Button variant={UI.Button.Outline} className="w-full border border-gray-400">{"Add"->React.string}</UI.Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+}
+
+
 module Notif = {
   @react.component
   let make = (~title, ~description) => {
@@ -18,18 +117,54 @@ module Categories = {
   @react.component
   let make = (~selected, ~categories) => {
     <div className="my-5">
-      <div className="flex w-full space-x-4 overflow-x-auto snap-x snap-mandatory scroll-px-2">
-        {Belt.Array.map(categories, (category) => {
-          let aditionalClassName = switch selected {
-            | Some(n) => n == category ? " bg-primary text-primary-foreground" : ""
-            | None => ""
+      <UI.ScrollArea className="whitespace-nowrap">
+        <div className="flex w-max space-x-4 snap-x snap-mandatory scroll-px-2">
+          {Belt.Array.map(categories, (category) => {
+            let aditionalClassName = switch selected {
+              | Some(n) => n == category ? " bg-primary text-primary-foreground" : ""
+              | None => ""
+            }
+            <li key={category} className="inline-block snap-always snap-start py-2"> 
+              <UI.Button variant={UI.Button.Outline} className={"text-xs border p-0 px-4 leading-1" ++ aditionalClassName}>
+                {category->React.string}
+              </UI.Button>
+            </li>
+          })->React.array}
+        </div>
+        <UI.ScrollBar orientation="horizontal" />
+      </UI.ScrollArea>
+    </div>
+  }
+}
+
+module Recommendation = {
+  @react.component
+  let make = () => {
+    <div>
+      <Title id="recommendation">
+        {"Recommendation"->React.string}
+      </Title>
+      <div className="grid grid-cols-2 gap-5 mt-3">
+        <CardVertical data={{
+          title: "Beef Rendang",
+          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+          image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+          flag: [Recommended],
+          price: {
+            value: 25000.0,
+            currency: "IDR"
           }
-          <li key={category} className="inline-block snap-always snap-start pb-2"> 
-            <UI.Button variant={UI.Button.Outline} className={"text-xs border p-0 px-4 leading-1" ++ aditionalClassName}>
-              {category->React.string}
-            </UI.Button>
-          </li>
-        })->React.array}
+        }} />
+        <CardVertical data={{
+          title: "Double Cheeseburger",
+          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+          image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+          flag: [],
+          price: {
+            value: 35000.0,
+            currency: "IDR"
+          }
+        }} />       
       </div>
     </div>
   }
@@ -37,9 +172,8 @@ module Categories = {
 
 @react.component
 let make = () => {
-  <div className="absolute shadow-xl w-full h-screen">
+  <div className="w-full h-screen">
     <div className="font-plus-jakarta max-w-[450px] m-auto overflow-x-hidden">
-      <UI.Meteors number={28} />
       <div className="text-center my-8">
         <span className="text-3xl font-bold block mb-1">
           {"Imperial Kitchen"->React.string}
@@ -54,6 +188,50 @@ let make = () => {
       <UI.Input placeholder="Macarroni" />
 
       <Categories categories={categories} selected={Some("All")} />
+
+      <Recommendation />
+
+      <div className="my-5">
+        <Title id="asian">
+          {"Asian"->React.string}
+        </Title>
+        <div className="grid gap-7 mt-3">
+          <CardHorizontal data={{
+            title: "Beef Rendang",
+            description: "Slow-cooked Indonesian beef in coconut milk, infused with aromatic spices, tender, rich, and flavorful.",
+            image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+            flag: [],
+            price: {
+              value: 35000.0,
+              currency: "IDR"
+            }
+          }} />       
+          <CardHorizontal data={{
+            title: "Tandoori Chicken",
+            description: "Indian dish of marinated chicken roasted in a clay oven, tender, smoky, flavorful.",
+            image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+            flag: [],
+            price: {
+              value: 35000.0,
+              currency: "IDR"
+            }
+          }} />       
+
+          <CardHorizontal data={{
+            title: "Banh Xeo",
+            description: "Vietnamese savory crepe filled with shrimp, pork, bean sprouts; crispy, flavorful, served with herbs.",
+            image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+            flag: [],
+            price: {
+              value: 35000.0,
+              currency: "IDR"
+            }
+          }} />       
+
+
+        </div>
+
+      </div>
     </div>
   </div>
 
