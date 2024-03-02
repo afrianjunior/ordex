@@ -1,10 +1,27 @@
-module Title = {
+module HeadContent = {
   @react.component
-  let make = (~children: React.element, ~id) => {
-    <h2 id={id} className="leading-relaxed scroll-m-20 text-xl font-semibold tracking-tight">
-      children
-    </h2>
-   
+  let make = (~children: React.element, ~id, ~withSearch=?) => {
+    <div className="sticky top-[-1px] pt-3 grid grid-cols-2">
+      <h2 id={id} className=" leading-relaxed scroll-m-20 text-xl font-semibold tracking-tight">
+        children
+      </h2>
+    </div>
+  }
+}
+
+module Search = {
+  @react.component
+  let make = () => {
+    <div className="sticky top-[-1px]">
+      <div className="absolute right-0 left-0 py-3 bg-white flex justify-end cursor-pointer">
+        <div className="flex items-center border border-gray-100 rounded w-28 p-1 px-3 text-xs">
+          <Icon.MagnifyingGlassIcon className="w-4 h-4 mr-1" />
+          <span>
+            {"Search"->React.string}
+          </span>
+        </div>
+      </div>
+    </div>
   }
 }
 
@@ -139,11 +156,11 @@ module Categories = {
 
 module Recommendation = {
   @react.component
-  let make = () => {
+  let make = (~withSearch=?) => {
     <div>
-      <Title id="recommendation">
+      <HeadContent id="recommendation" ?withSearch>
         {"Recommendation"->React.string}
-      </Title>
+      </HeadContent>
       <div className="grid grid-cols-2 gap-5 mt-3">
         <CardVertical data={{
           title: "Beef Rendang",
@@ -170,10 +187,54 @@ module Recommendation = {
   }
 }
 
+module Section = {
+  @react.component
+  let make = (~title, ~withSearch=?) => {
+    <div className="my-5">
+      <HeadContent id={title} ?withSearch>
+        {title->React.string}
+      </HeadContent>
+      <div className="grid gap-7 mt-3">
+        <CardHorizontal data={{
+          title: "Beef Rendang",
+          description: "Slow-cooked Indonesian beef in coconut milk, infused with aromatic spices, tender, rich, and flavorful.",
+          image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+          flag: [],
+          price: {
+            value: 35000.0,
+            currency: "IDR"
+          }
+        }} />       
+        <CardHorizontal data={{
+          title: "Tandoori Chicken",
+          description: "Indian dish of marinated chicken roasted in a clay oven, tender, smoky, flavorful.",
+          image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+          flag: [],
+          price: {
+            value: 35000.0,
+            currency: "IDR"
+          }
+        }} />       
+
+        <CardHorizontal data={{
+          title: "Banh Xeo",
+          description: "Vietnamese savory crepe filled with shrimp, pork, bean sprouts; crispy, flavorful, served with herbs.",
+          image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+          flag: [],
+          price: {
+            value: 35000.0,
+            currency: "IDR"
+          }
+        }} />       
+      </div>
+   </div>
+  }
+}
+
 @react.component
 let make = () => {
-  <div className="w-full h-screen">
-    <div className="font-plus-jakarta max-w-[450px] m-auto overflow-x-hidden">
+  <div className="">
+    <div className="relative font-plus-jakarta max-w-[450px] m-auto">
       <div className="text-center my-8">
         <span className="text-3xl font-bold block mb-1">
           {"Imperial Kitchen"->React.string}
@@ -185,53 +246,14 @@ let make = () => {
 
       <Notif title="Welcome" description="Hi there! How are you? I hope you're doing great. Just to let you know, we offer a variety of foods and drinks from different regions. Hope you enjoy them! 🥰" />
       
-      <UI.Input placeholder="Macarroni" />
-
       <Categories categories={categories} selected={Some("All")} />
+      
+      <Search />
+      <Recommendation withSearch={true} />
 
-      <Recommendation />
+      <Section title="Asian" />
+      <Section title="Western" />
 
-      <div className="my-5">
-        <Title id="asian">
-          {"Asian"->React.string}
-        </Title>
-        <div className="grid gap-7 mt-3">
-          <CardHorizontal data={{
-            title: "Beef Rendang",
-            description: "Slow-cooked Indonesian beef in coconut milk, infused with aromatic spices, tender, rich, and flavorful.",
-            image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            flag: [],
-            price: {
-              value: 35000.0,
-              currency: "IDR"
-            }
-          }} />       
-          <CardHorizontal data={{
-            title: "Tandoori Chicken",
-            description: "Indian dish of marinated chicken roasted in a clay oven, tender, smoky, flavorful.",
-            image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            flag: [],
-            price: {
-              value: 35000.0,
-              currency: "IDR"
-            }
-          }} />       
-
-          <CardHorizontal data={{
-            title: "Banh Xeo",
-            description: "Vietnamese savory crepe filled with shrimp, pork, bean sprouts; crispy, flavorful, served with herbs.",
-            image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            flag: [],
-            price: {
-              value: 35000.0,
-              currency: "IDR"
-            }
-          }} />       
-
-
-        </div>
-
-      </div>
     </div>
   </div>
 
