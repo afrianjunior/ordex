@@ -1,8 +1,10 @@
+open Webapi.Dom
+
 module HeadContent = {
   @react.component
-  let make = (~children: React.element, ~id, ~withSearch=?) => {
+  let make = (~children: React.element, ~id) => {
     <div className="sticky top-[-1px] pt-3 grid grid-cols-2">
-      <h2 id={id} className=" leading-relaxed scroll-m-20 text-xl font-semibold tracking-tight">
+      <h2 id={id} className="leading-relaxed scroll-m-20 text-xl font-semibold tracking-tight">
         children
       </h2>
     </div>
@@ -12,7 +14,20 @@ module HeadContent = {
 module Search = {
   @react.component
   let make = () => {
-    <div className="sticky top-[-1px]">
+    let searchRef = React.useRef(Js.Nullable.null)
+    let handeScrollEffect = _ => {
+      Js.log(searchRef)
+    }
+
+    React.useEffect0(_ => {
+      window->Window.addEventListener("scroll", handeScrollEffect)
+      let cleanUp = () => {
+         window->Window.removeEventListener("scroll", handeScrollEffect)
+      }
+      Some(cleanUp)
+    })
+
+    <div ref={ReactDOM.Ref.domRef(searchRef)} className="sticky top-[-1px]">
       <div className="absolute right-0 left-0 py-3 bg-white flex justify-end cursor-pointer">
         <div className="flex items-center border border-gray-100 rounded w-28 p-1 px-3 text-xs">
           <Icon.MagnifyingGlassIcon className="w-4 h-4 mr-1" />
@@ -88,7 +103,6 @@ module CardHorizontal = {
         </div>
         <div>
           <div className="rounded-md h-32 w-full bg-cover bg-center" style={{backgroundImage: "url(" ++ data.image ++ ")"}} />
-
         </div>
       </div>
       <div className="grid grid-cols-3 gap-6">
@@ -112,7 +126,6 @@ module CardHorizontal = {
     </div>
   }
 }
-
 
 module Notif = {
   @react.component
@@ -156,9 +169,9 @@ module Categories = {
 
 module Recommendation = {
   @react.component
-  let make = (~withSearch=?) => {
+  let make = () => {
     <div>
-      <HeadContent id="recommendation" ?withSearch>
+      <HeadContent id="recommendation">
         {"Recommendation"->React.string}
       </HeadContent>
       <div className="grid grid-cols-2 gap-5 mt-3">
@@ -189,9 +202,9 @@ module Recommendation = {
 
 module Section = {
   @react.component
-  let make = (~title, ~withSearch=?) => {
+  let make = (~title) => {
     <div className="my-5">
-      <HeadContent id={title} ?withSearch>
+      <HeadContent id={title}>
         {title->React.string}
       </HeadContent>
       <div className="grid gap-7 mt-3">
@@ -231,9 +244,67 @@ module Section = {
   }
 }
 
+module ItemDetailDrawer = {
+  @react.component
+  let make = (~data) => {
+    <UI.Drawer isOpen={true}>
+      <UI.DrawerContent>
+        <div className="font-plus-jakarta w-[450px] mx-auto">
+          <UI.DrawerHeader>
+            <h3 className="leading-relaxed scroll-m-20 text-xl font-semibold tracking-tight">
+              {data.title->React.string}
+            </h3>
+          </UI.DrawerHeader>
+          <div>
+            <UI.Carousel>
+              <UI.CarouselContent className="-ml-4">
+                <UI.CarouselItem className="pl-4">
+                  <img className="object-center h-56 w-full mx-2 rounded-lg" src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="" />
+                </UI.CarouselItem>
+                <UI.CarouselItem className="pl-4">
+                  <img className="object-center h-56 w-full mx-2 rounded-lg" src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="" />
+                </UI.CarouselItem>
+              </UI.CarouselContent>
+            </UI.Carousel>
+
+            <p className="leading-7 text-sm text-zinc-400 mt-4">
+              {data.description->React.string}
+            </p>
+
+            <div className="leading-6 font-bold mt-3">
+              <span>
+                {data.price.value->React.float}
+              </span>
+              <span className="pl-1">
+                {data.price.currency->React.string}
+              </span>
+            </div>
+
+            <div className="mt-4">
+              <UI.Button variant={UI.Button.Outline} className="w-full border border-gray-400">{"Add"->React.string}</UI.Button>
+            </div>
+          </div>
+          <UI.DrawerFooter>
+          </UI.DrawerFooter>
+        </div>
+      </UI.DrawerContent>
+    </UI.Drawer>
+  }
+}
+
 @react.component
 let make = () => {
   <div className="">
+    <ItemDetailDrawer data={{
+      title: "Banh Xeo",
+      description: "Vietnamese savory crepe filled with shrimp, pork, bean sprouts; crispy, flavorful, served with herbs.",
+      image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+      flag: [],
+      price: {
+        value: 35000.0,
+        currency: "IDR"
+      }
+    }} />
     <div className="relative font-plus-jakarta max-w-[450px] m-auto">
       <div className="text-center my-8">
         <span className="text-3xl font-bold block mb-1">
@@ -249,8 +320,8 @@ let make = () => {
       <Categories categories={categories} selected={Some("All")} />
       
       <Search />
-      <Recommendation withSearch={true} />
 
+      <Recommendation />
       <Section title="Asian" />
       <Section title="Western" />
 

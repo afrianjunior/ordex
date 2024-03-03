@@ -12,7 +12,6 @@ type types =
   | @as("color")Color
   | @as("file")File
   | @as("hidden")Hidden
-  | @as("text")None
 
 @react.component @module("./input")
 

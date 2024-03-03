@@ -1,6 +1,5 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
-import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite';
 import createReactPlugin from '@vitejs/plugin-react';
 import createReScriptPlugin from '@jihchi/vite-plugin-rescript';
@@ -12,14 +11,14 @@ export default defineConfig({
     port: 3000
   },
   plugins: [createReactPlugin(), createReScriptPlugin(), viteSingleFile()],
-  build: {
-    target: 'es2015'
-  },
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  },
+  // build: {
+  //   target: 'es2015'
+  // },
+  // resolve: {
+  //   alias: {
+  //     '@': fileURLToPath(new URL('./src', import.meta.url))
+  //   }
+  // },
   test: {
     include: ['tests/**/*_test*.js'],
     globals: true,
